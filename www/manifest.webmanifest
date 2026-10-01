@@ -1,0 +1,31 @@
+{
+ "name": "AN2U Books by Annamalai Shanmuganathan",
+ "short_name": "AN2U Books",
+ "description": "E-book reader app for the author's own books - Tamil & English books by Annamalai Shanmuganathan.",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0f172a",
+ "theme_color": "#0f172a",
+ "icons": [
+  {
+   "src": "icons/icon-192-opaque.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512-opaque.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "id": "./index.html"
+}
