@@ -384,7 +384,9 @@
         /* v7: phone fixes - no black patches while flipping, keep reader clear of the status bar */
         @media (max-width: 768px) {
             .flipbook-viewport, #ebook-modal .flip-book { background: var(--pg-bg) !important; }
-            .flip-book, .flip-book .stf__parent, .flip-book .stf__block { -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+            /* scrollable layers under 3D page-flip transforms fail to paint in Android WebView (black patches) */
+            .page-wrapper { overflow: hidden !important; box-shadow: none !important; }
+            .page-wrapper, .page-content { -webkit-overflow-scrolling: auto; will-change: auto !important; }
         }
         #ebook-modal { padding-top: env(safe-area-inset-top, 0px); }
         @media (max-width: 768px) {
