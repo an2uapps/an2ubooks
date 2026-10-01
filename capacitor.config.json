@@ -1,0 +1,8 @@
+{
+  "appId": "com.an2u.books",
+  "appName": "AN2U Books",
+  "webDir": "www",
+  "backgroundColor": "#0d172b",
+  "android": { "allowMixedContent": false },
+  "ios": { "contentInset": "always", "backgroundColor": "#0d172b" }
+}
