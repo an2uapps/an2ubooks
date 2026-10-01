@@ -8,7 +8,7 @@ workflows:
       groups:
         - an2u_signing           # secure variables: AN2U_KEYSTORE_BASE64, AN2U_KEYSTORE_PASSWORD, AN2U_KEY_ALIAS, AN2U_KEY_PASSWORD
       node: 22
-      java: 17
+      java: 21
     scripts:
       - name: Install and add the Android project
         script: |
