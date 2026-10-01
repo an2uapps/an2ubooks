@@ -25,7 +25,9 @@ workflows:
           echo "$AN2U_KEYSTORE_BASE64" | tr -d ' \n\r' | base64 --decode > android/app/release.keystore
           ls -l android/app/release.keystore
           keytool -list -keystore android/app/release.keystore -storepass "$AN2U_KEYSTORE_PASSWORD" -alias "$AN2U_KEY_ALIAS"
-          python3 scripts/patch-android.py
+          if [ -f patch-android.py ]; then python3 patch-android.py; else python3 scripts/patch-android.py; fi
+          echo "--- signing lines in build.gradle ---"
+          grep -n "AN2U_\|CM_KEY\|signingConfig\|versionCode" android/app/build.gradle
       - name: Build the Play Store bundle (AAB) and a test APK
         script: |
           cd android
