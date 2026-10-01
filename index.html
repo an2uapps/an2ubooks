@@ -356,7 +356,7 @@
         .pub-strip .ps-s { font-size:.85rem; color:#d1fae5; line-height:1.35; }
 
         /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media (max-width: 768px), (orientation: portrait) {
             .flipbook-header-text { display: none; }
             .btn-txt { display: none; }
             .flipbook-tools { margin-right: 4px; gap: 5px; }
@@ -382,14 +382,23 @@
         .flipbook-nav { background:#000; }
 
         /* v7: phone fixes - no black patches while flipping, keep reader clear of the status bar */
-        @media (max-width: 768px) {
+        @media (max-width: 768px), (orientation: portrait) {
             .flipbook-viewport, #ebook-modal .flip-book { background: var(--pg-bg) !important; }
             /* scrollable layers under 3D page-flip transforms fail to paint in Android WebView (black patches) */
             .page-wrapper { overflow: hidden !important; box-shadow: none !important; }
             .page-wrapper, .page-content { -webkit-overflow-scrolling: auto; will-change: auto !important; }
         }
         #ebook-modal { padding-top: env(safe-area-inset-top, 0px); }
-        @media (max-width: 768px) {
+
+        /* v8: no shadow layers (they render as solid black in Android WebView); toolbar always keeps the close button visible */
+        .stf__outerShadow, .stf__innerShadow, .stf__hardShadow, .stf__hardInnerShadow { display:none !important; }
+        .flipbook-header { flex-wrap: nowrap; }
+        .flipbook-tools { min-width:0; flex:1 1 auto; overflow-x:auto; scrollbar-width:none; justify-content:flex-end; }
+        .flipbook-tools::-webkit-scrollbar { display:none; }
+        .flipbook-close-btn { flex:0 0 auto; }
+        @media (max-width: 1100px) { .flipbook-header-text { display:none !important; } }
+        @media (orientation: portrait) { .btn-txt { display:none; } #ebook-modal .flipbook-viewport { background: var(--pg-bg) !important; } }
+        @media (max-width: 768px), (orientation: portrait) {
             .flip-book { top:0; bottom:0; max-width:none; }
             .reader-panel { top:auto; bottom:calc(66px + env(safe-area-inset-bottom)); left:6px; right:6px; width:auto; max-height:52vh; background:#0f172a; padding:10px 12px; border-radius:14px 14px 10px 10px; }
             .reader-panel h4 { margin:0 0 6px; }
@@ -1669,10 +1678,10 @@
                 wrapper.appendChild(d);
             });
             const cw = container.clientWidth, ch = container.clientHeight;
-            const phone = cw > 0 && cw < 600 && ch > 0;   // single full-bleed page that fills the screen
+            const phone = cw > 0 && ch > 0 && (cw < 600 || ch > cw);   // single full-bleed page that fills the screen
             pageFlipInstance = new window.St.PageFlip(wrapper, {
-                width: phone ? cw : 450, height: phone ? ch : 600, size: 'stretch', minWidth: phone ? Math.min(300, cw) : 300, maxWidth: 1000, minHeight: phone ? Math.min(400, ch) : 400, maxHeight: Math.max(1350, phone ? ch : 0),
-                maxShadowOpacity: 0.5, showCover: true, mobileScrollSupport: false, useMouseEvents: true, swipeDistance: 40,
+                width: phone ? cw : 450, height: phone ? ch : 600, size: 'stretch', minWidth: phone ? Math.ceil(cw * 0.6) : 300, maxWidth: phone ? Math.max(1000, cw) : 1000, minHeight: phone ? Math.min(400, ch) : 400, maxHeight: Math.max(1350, phone ? ch : 0),
+                maxShadowOpacity: 0, showCover: true, mobileScrollSupport: false, useMouseEvents: true, swipeDistance: 40,
                 disableFlipByClick: true
             });
             pageFlipInstance.loadFromHTML(wrapper.querySelectorAll('.my-book-page'));
