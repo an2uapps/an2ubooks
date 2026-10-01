@@ -18,7 +18,13 @@ workflows:
           npx cap sync android
       - name: Add signing and version number
         script: |
-          echo "$AN2U_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          for v in AN2U_KEYSTORE_BASE64 AN2U_KEYSTORE_PASSWORD AN2U_KEY_ALIAS AN2U_KEY_PASSWORD; do
+            if [ -z "$(printenv $v)" ]; then echo "MISSING VARIABLE: $v"; MISSING=1; else echo "found variable: $v"; fi
+          done
+          if [ -n "$MISSING" ]; then echo "Add the missing variable(s) to the an2u_signing group in Codemagic."; exit 1; fi
+          echo "$AN2U_KEYSTORE_BASE64" | tr -d ' \n\r' | base64 --decode > android/app/release.keystore
+          ls -l android/app/release.keystore
+          keytool -list -keystore android/app/release.keystore -storepass "$AN2U_KEYSTORE_PASSWORD" -alias "$AN2U_KEY_ALIAS"
           python3 scripts/patch-android.py
       - name: Build the Play Store bundle (AAB) and a test APK
         script: |
