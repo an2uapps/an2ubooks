@@ -5,8 +5,8 @@ workflows:
     instance_type: linux_x2
     max_build_duration: 40
     environment:
-      android_signing:
-        - an2u_keystore          # the keystore you upload in Codemagic, with this reference name
+      groups:
+        - an2u_signing           # secure variables: AN2U_KEYSTORE_BASE64, AN2U_KEYSTORE_PASSWORD, AN2U_KEY_ALIAS, AN2U_KEY_PASSWORD
       node: 22
       java: 17
     scripts:
@@ -17,7 +17,9 @@ workflows:
           npm run assets
           npx cap sync android
       - name: Add signing and version number
-        script: python3 scripts/patch-android.py
+        script: |
+          echo "$AN2U_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          python3 scripts/patch-android.py
       - name: Build the Play Store bundle (AAB) and a test APK
         script: |
           cd android
